@@ -42,6 +42,13 @@ until </dev/tcp/${DB_HOST}/${DB_PORT} || [ $RETRIES -eq 0 ]; do
 RETRIES=$((RETRIES-=1))
 sleep 1
 done
+
+if [[ $RETRIES -eq 0]]
+then
+    >&2 echo "Failed to establish connection to Postgres DB :("
+    exit 1
+fi
+
 >&2 echo "Postgres is up and running on port ${DB_PORT}!"
 
 DATABASE_URL="postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
