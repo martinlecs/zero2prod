@@ -46,7 +46,7 @@ done
 
 if [[ -n "${RUNNING_CI}"]]
 then
-    echo "{DATABASE_URL}={postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}}" >> "$GITHUB_ENV"
+    echo "DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}" >> "$GITHUB_ENV"
 else
     DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
     export DATABASE_URL
