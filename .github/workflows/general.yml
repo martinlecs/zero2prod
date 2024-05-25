@@ -38,7 +38,7 @@ jobs:
           --locked
 
       - name: Migrate database
-        run: SKIP_DOCKER=true ./scripts/init_db.sh
+        run: SKIP_DOCKER=true RUNNING_CI=true ./scripts/init_db.sh
 
       - name: Run tests
         run: cargo test
@@ -87,7 +87,7 @@ jobs:
           --locked
 
       - name: Migrate database
-        run: SKIP_DOCKER=true ./scripts/init_db.sh
+        run: SKIP_DOCKER=true RUNNING_CI=true ./scripts/init_db.sh
 
       - name: Linting
         run: cargo clippy -- -D warnings
@@ -124,7 +124,7 @@ jobs:
           --locked
 
       - name: Migrate database
-        run: SKIP_DOCKER=true ./scripts/init_db.sh
+        run: SKIP_DOCKER=true RUNNING_CI=true ./scripts/init_db.sh
 
       - name: Generate code coverage
         run: |

@@ -44,9 +44,13 @@ sleep 1
 done
 >&2 echo "Postgres is up and running on port ${DB_PORT}!"
 
-DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
-export DATABASE_URL
->&2 echo "${DATABASE_URL}"
+if [[ -n "${RUNNING_CI}"]]
+then
+    echo "{DATABASE_URL}={postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}}" >> "$GITHUB_ENV"
+else
+    DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+    export DATABASE_URL
+fi
 
 if [[ -z "${SKIP_SQLX}" ]]
 then
