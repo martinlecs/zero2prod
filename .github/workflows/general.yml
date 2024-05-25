@@ -130,3 +130,5 @@ jobs:
       - name: Generate code coverage
         run: |
           cargo tarpaulin --verbose --workspace
+        env:
+          POSTGRES_HOST: postgres
