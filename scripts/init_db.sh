@@ -49,8 +49,7 @@ export DATABASE_URL
 
 if [[ -n "${RUNNING_CI}" ]]
 then
-    # set this env var in GHA so that subsequent sqlx-related actions can connect to the DB
-    echo "DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}" >> "$GITHUB_ENV"
+    echo "DATABASE_URL=${DATABASE_URL}" >> "$GITHUB_OUTPUT"
 fi
 
 if [[ -z "${SKIP_SQLX}" ]]

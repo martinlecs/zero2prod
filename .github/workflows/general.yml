@@ -38,10 +38,13 @@ jobs:
           --locked
 
       - name: Migrate database
+        id: migrate-database
         run: SKIP_DOCKER=true RUNNING_CI=true ./scripts/init_db.sh
 
       - name: Run tests
         run: cargo test
+        env:
+          DATABASE_URL: ${{ steps.migrate-database.outputs.DATABASE_URL}}
 
   fmt:
     name: Rustfmt
@@ -87,10 +90,13 @@ jobs:
           --locked
 
       - name: Migrate database
+        id: migrate-database
         run: SKIP_DOCKER=true RUNNING_CI=true ./scripts/init_db.sh
 
       - name: Linting
         run: cargo clippy -- -D warnings
+        env:
+          DATABASE_URL: ${{ steps.migrate-database.outputs.DATABASE_URL}}
 
   coverage:
     name: Code coverage
@@ -124,8 +130,11 @@ jobs:
           --locked
 
       - name: Migrate database
+        id: migrate-databa
         run: SKIP_DOCKER=true RUNNING_CI=true ./scripts/init_db.sh
 
       - name: Generate code coverage
         run: |
           cargo tarpaulin --verbose --workspace
+        env:
+          DATABASE_URL: ${{ steps.migrate-database.outputs.DATABASE_URL}}
