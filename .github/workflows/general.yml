@@ -106,6 +106,8 @@ jobs:
     container:
       image: xd009642/tarpaulin
       options: --security-opt seccomp=unconfined
+      env:
+        POSTGRES_HOST: postgres
     steps:
       - uses: actions/checkout@v4
 
@@ -124,11 +126,7 @@ jobs:
 
       - name: Migrate database
         run: SKIP_DOCKER=true ./scripts/init_db.sh
-        env:
-          POSTGRES_HOST: postgres
 
       - name: Generate code coverage
         run: |
           cargo tarpaulin --verbose --workspace
-        env:
-          POSTGRES_HOST: postgres
