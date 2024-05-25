@@ -43,7 +43,7 @@ RETRIES=$((RETRIES-=1))
 sleep 1
 done
 
-if [[ $RETRIES -eq 0]]
+if [[ $RETRIES -eq 0 ]]
 then
     >&2 echo "Failed to establish connection to Postgres DB :("
     exit 1
