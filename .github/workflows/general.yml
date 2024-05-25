@@ -125,8 +125,11 @@ jobs:
           --locked
 
       - name: Migrate database
-        run: SKIP_DOCKER=true ./scripts/init_db.sh
+        id: migrate-database
+        run: SKIP_DOCKER=true OUTPUT_DATABASE_URL=true ./scripts/init_db.sh
 
       - name: Generate code coverage
         run: |
           cargo tarpaulin --verbose --workspace
+        env:
+          DATABASE_URL: ${{ steps.migrate-database.outputs.DATABASE_URL }}

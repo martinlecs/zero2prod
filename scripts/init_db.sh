@@ -52,6 +52,10 @@ fi
 >&2 echo "Postgres is up and running on port ${DB_PORT}!"
 
 DATABASE_URL="postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
+if [[ -n "${OUTPUT_DATABASE_URL}" ]]
+then
+    echo "DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}" >> "$GITHUB_OUTPUT"
+fi
 export DATABASE_URL
 
 if [[ -z "${SKIP_SQLX}" ]]
