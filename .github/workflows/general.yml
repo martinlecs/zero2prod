@@ -133,3 +133,4 @@ jobs:
           cargo tarpaulin --verbose --workspace
         env:
           DATABASE_URL: ${{ steps.migrate-database.outputs.DATABASE_URL }}
+          IN_CONTAINER_IN_CI: true
