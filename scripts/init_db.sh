@@ -47,11 +47,6 @@ done
 DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
 export DATABASE_URL
 
-if [[ -n "${RUNNING_CI}" ]]
-then
-    echo "DATABASE_URL=${DATABASE_URL}" >> "$GITHUB_OUTPUT"
-fi
-
 if [[ -z "${SKIP_SQLX}" ]]
 then
     sqlx database create
