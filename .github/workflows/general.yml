@@ -37,7 +37,6 @@ jobs:
           --locked
 
       - name: Migrate database
-        id: migrate-database
         run: SKIP_DOCKER=true ./scripts/init_db.sh
 
       - name: Run tests
@@ -87,7 +86,6 @@ jobs:
           --locked
 
       - name: Migrate database
-        id: migrate-database
         run: SKIP_DOCKER=true ./scripts/init_db.sh
 
       - name: Linting
@@ -125,7 +123,6 @@ jobs:
           --locked
 
       - name: Migrate database
-        id: migrate-database
         run: SKIP_DOCKER=true ./scripts/init_db.sh
 
       - name: Generate code coverage

@@ -45,6 +45,7 @@ done
 >&2 echo "Postgres is up and running on port ${DB_PORT}!"
 
 DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+>&2 echo "Postgres connection url is ${DATABASE_URL}"
 export DATABASE_URL
 
 if [[ -z "${SKIP_SQLX}" ]]
