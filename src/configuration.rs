@@ -28,20 +28,18 @@ impl DatabaseSettings {
     }
 }
 
-fn check_db_host() -> Option<String> {
-    match std::env::var("IN_CONTAINER_IN_CI") {
-        Ok(_) => Some("postgres".to_owned()),
-        Err(_) => None,
-    }
-}
-
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {
     let settings = config::Config::builder()
         .add_source(config::File::new(
             "configuration.yaml",
             config::FileFormat::Yaml,
         ))
-        .set_override_option("database.host", check_db_host())?
+        .set_override_option("database.host", {
+            match std::env::var("IN_CONTAINER_IN_CI") {
+                Ok(_) => Some("postgres".to_owned()),
+                Err(_) => None,
+            }
+        })?
         .build()?;
 
     settings.try_deserialize::<Settings>()
