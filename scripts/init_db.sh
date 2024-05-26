@@ -13,8 +13,7 @@ then
         echo >&2 "Error: sqlx is not installed."
         echo >&2 "Use:"
         echo >&2 "
-        cargo install --version='~0.7' sqlx-cli \
-        --no-default-features --features rustls,postgres"
+        cargo install --version='~0.7' sqlx-cli --no-default-features --features rustls,postgres"
         echo >&2 "to install it."
         exit 1
     fi
@@ -38,9 +37,9 @@ then
 fi
 
 until </dev/tcp/${DB_HOST}/${DB_PORT} || [ $RETRIES -eq 0 ]; do
->&2 echo "Postgres is still unavailable - sleeping"
-RETRIES=$((RETRIES-=1))
-sleep 1
+    >&2 echo "Postgres is still unavailable - sleeping"
+    RETRIES=$((RETRIES-=1))
+    sleep 1
 done
 
 if [[ $RETRIES -eq 0 ]]

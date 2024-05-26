@@ -9,8 +9,24 @@ pub struct FormData {
     name: String,
 }
 
-pub async fn subscribe(form: web::Form<FormData>, connection: web::Data<PgPool>) -> impl Responder {
-    match sqlx::query!(
+#[tracing::instrument(name = "Adding a new subscriber", skip(form, pool), fields(
+    request_id = %Uuid::new_v4(),
+    subscriber_email = %form.email,
+    subscriber_name = %form.name
+))]
+pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> impl Responder {
+    match insert_subscriber(&pool, &form).await {
+        Ok(_) => HttpResponse::Ok(),
+        Err(_) => HttpResponse::InternalServerError(),
+    }
+}
+
+#[tracing::instrument(
+    name = "Saving new subscriber details in the database",
+    skip(form, pool)
+)]
+pub async fn insert_subscriber(pool: &PgPool, form: &FormData) -> Result<(), sqlx::Error> {
+    sqlx::query!(
         r#"
         INSERT INTO subscriptions (id, email, name, subscribed_at)
         VALUES ($1, $2, $3, $4)
@@ -20,13 +36,11 @@ pub async fn subscribe(form: web::Form<FormData>, connection: web::Data<PgPool>)
         form.name,
         Utc::now()
     )
-    .execute(connection.get_ref())
+    .execute(pool)
     .await
-    {
-        Ok(_) => HttpResponse::Ok(),
-        Err(e) => {
-            println!("Failed to execute query: {}", e);
-            HttpResponse::InternalServerError()
-        }
-    }
+    .map_err(|e| {
+        tracing::error!("Failed to execute query: {:?}", e);
+        e
+    })?;
+    Ok(())
 }
