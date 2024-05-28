@@ -1,10 +1,9 @@
 name: zero2prod
 region: syd
 databases:
-  - engine: PG
-    name: newsletter
-    num_nodes: 1
-    size: db-s-dev-database
+  - cluster_name: db-postgresql-syd1-19092
+    engine: PG
+    production: true
     version: "16"
 services:
   - name: zero2prod
