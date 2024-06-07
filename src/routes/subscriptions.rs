@@ -41,24 +41,24 @@ pub async fn subscribe(
     let mut transaction = pool
         .begin()
         .await
-        .context("Failed to acquire a Postgres connection from the pool")?;
+        .with_context(|| "Failed to acquire a Postgres connection from the pool")?;
     let subscriber_id = insert_subscriber(&mut transaction, &subscriber)
         .await
-        .context("Failed to insert new subscriber in the database.")?;
+        .with_context(|| "Failed to insert new subscriber in the database.")?;
     let subscription_token = generate_subscription_token();
     store_token(&mut transaction, subscriber_id, &subscription_token)
         .await
-        .context(
+        .with_context(|| {
             "Failed to store the confirmation token for a new \
-            subscriber.",
-        )?;
+            subscriber."
+        })?;
     transaction
         .commit()
         .await
-        .context("Failed to commit SQL transaction to store a new subscriber.")?;
+        .with_context(|| "Failed to commit SQL transaction to store a new subscriber.")?;
     send_confirmation_email(&email_client, subscriber, &base_url.0, &subscription_token)
         .await
-        .context("Failed to send a confirmation email.")?;
+        .with_context(|| "Failed to send a confirmation email.")?;
     Ok(HttpResponse::Ok().finish())
 }
 
@@ -79,7 +79,7 @@ pub async fn send_confirmation_email(
 
     email_client
         .send_email(
-            new_subscriber.email,
+            &new_subscriber.email,
             "Welcome!",
             &format!(
                 "Welcome to our newsletter<br />\
@@ -192,7 +192,7 @@ impl std::error::Error for StoreTokenError {
     }
 }
 
-fn error_chain_fmt(
+pub fn error_chain_fmt(
     e: &impl std::error::Error,
     f: &mut std::fmt::Formatter<'_>,
 ) -> std::fmt::Result {
